@@ -48,7 +48,7 @@ class DarwinCore
     def normalize
       @res = {}
       ingest_core
-      calculate_classification_path
+      @tree = calculate_classification_path
       ingest_extensions
       @res
     end

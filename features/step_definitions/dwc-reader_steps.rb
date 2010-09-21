@@ -198,8 +198,21 @@ Then /^names used in classification can be accessed by "([^"]*)" method$/ do |na
   names.size.should > @normalized_classification.size
 end
 
+
 Then /^nodes_ids organized in trees can be accessed by "([^"]*)" method$/ do |tree|
+  @keys = []
+  def flatten_tree(data)
+    data.each do |k, v|
+      require 'ruby-debug'; debugger
+      @keys << k
+      if @keys.size < 100
+        flatten_tree(v)
+      end
+    end
+  end
   tree = @cn.send(tree.to_sym)
   tree.class.should == Hash
+  flatten_tree(tree)
+  puts '' 
 end
 
