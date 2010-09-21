@@ -38,7 +38,7 @@ class DarwinCore
     end
 
     def add_name_string(name_string)
-      @name_strings[name_string] unless @name_strings[name_string]
+      @name_strings[name_string] = 1 unless @name_strings[name_string]
     end
 
     def name_strings
@@ -50,7 +50,6 @@ class DarwinCore
       ingest_core
       calculate_classification_path
       ingest_extensions
-      require 'ruby-debug'; debugger
       @res
     end
 
