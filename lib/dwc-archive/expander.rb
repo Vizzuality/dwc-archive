@@ -11,8 +11,8 @@ class DarwinCore
       clean
       raise DarwinCore::FileNotFoundError unless File.exists?(@archive_path)
       success = @unpacker.call(@path, @archive_path) if @unpacker
-      (@unpacker && success && $?.exitstatus == 0) ? 
-        success : 
+      (@unpacker && success && $?.exitstatus == 0) ?
+        success :
         (clean; raise DarwinCore::UnpackingError)
     end
 
@@ -40,20 +40,20 @@ class DarwinCore
       file_type    = file_command.read
       file_command.close
 
-      if file_type.match(/tar.*gzip/i)
+      if file_type.match(/tar.*gzip/i) || file_type.match(/Zip/)
         return proc do |tmp_path, archive_path|
           FileUtils.mkdir tmp_path
           path = esc(archive_path)
-          system("tar -zxf #{path} -C #{tmp_path} > /dev/null 2>&1")
+          system("cd #{tmp_path}; jar xf #{path} > /dev/null 2>&1")
         end
       end
 
-      if file_type.match(/Zip/)
-        return proc do |tmp_path, archive_path| 
-          path = esc(archive_path)
-          system("unzip -qq -d #{tmp_path} #{path} > /dev/null 2>&1")
-        end
-      end
+      #if file_type.match(/Zip/)
+        #return proc do |tmp_path, archive_path|
+          #path = esc(archive_path)
+          #system("unzip -qq -d #{tmp_path} #{path} > /dev/null 2>&1")
+        #end
+      #end
 
       return nil
     end
