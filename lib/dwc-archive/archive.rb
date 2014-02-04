@@ -1,4 +1,3 @@
-require 'nokogiri'
 class DarwinCore
   class Archive
     attr_reader :meta, :eml
@@ -10,7 +9,7 @@ class DarwinCore
       if valid?
         @meta = DarwinCore::XmlReader.
           from_xml(open(File.join(@expander.path, 'meta.xml')))
-        @eml = files.include?("eml.xml") ? 
+        @eml = files.include?("eml.xml") ?
           DarwinCore::XmlReader.
             from_xml(open(File.join(@expander.path, 'eml.xml'))) : nil
       else
@@ -24,7 +23,7 @@ class DarwinCore
       valid = valid && @expander.path && FileTest.exists?(@expander.path)
       valid = valid && files && files.include?('meta.xml')
     end
-    
+
     def files
       @expander.files
     end

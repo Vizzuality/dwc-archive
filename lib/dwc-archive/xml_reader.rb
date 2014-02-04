@@ -1,15 +1,14 @@
 # USAGE: Hash.from_xml:(YOUR_XML_STRING)
-require 'nokogiri'
-# modified from 
+# modified from
 # http://stackoverflow.com/questions/1230741/
 # convert-a-nokogiri-document-to-a-ruby-hash/1231297#1231297
 class DarwinCore
   module XmlReader
     class << self
-      def from_xml(xml_io) 
+      def from_xml(xml_io)
         begin
           result = Nokogiri::XML(xml_io)
-          return { result.root.name.to_sym => xml_node_to_hash(result.root)} 
+          return { result.root.name.to_sym => xml_node_to_hash(result.root)}
         rescue Exception => e
           raise e
         end
@@ -17,8 +16,8 @@ class DarwinCore
 
       private
 
-      def xml_node_to_hash(node) 
-        # If we are at the root of the document, start the hash 
+      def xml_node_to_hash(node)
+        # If we are at the root of the document, start the hash
         if node.element?
           result_hash = {}
           if node.attributes != {}
@@ -29,8 +28,8 @@ class DarwinCore
             end
           end
           if node.children.size > 0
-            node.children.each do |child| 
-              result = xml_node_to_hash(child) 
+            node.children.each do |child|
+              result = xml_node_to_hash(child)
 
               if child.name == "text"
                 unless child.next_sibling || child.previous_sibling
@@ -40,22 +39,22 @@ class DarwinCore
                 if result_hash[child.name.to_sym].is_a?(Object::Array)
                   result_hash[child.name.to_sym] << prepare(result)
                 else
-                  result_hash[child.name.to_sym] = 
+                  result_hash[child.name.to_sym] =
                     [result_hash[child.name.to_sym]] << prepare(result)
                 end
-              else 
+              else
                 result_hash[child.name.to_sym] = prepare(result)
               end
             end
 
-            return result_hash 
-          else 
             return result_hash
-          end 
-        else 
-          return prepare(node.content.to_s) 
-        end 
-      end          
+          else
+            return result_hash
+          end
+        else
+          return prepare(node.content.to_s)
+        end
+      end
 
       def prepare(data)
         return data if data.class != String
